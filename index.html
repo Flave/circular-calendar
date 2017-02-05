@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<svg id="canvas" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+		<style>
+			* {
+				font-family: 'Brandon Grotesque', sans-serif;
+			}
+
+			circle, path, line {
+				fill: transparent;
+			}
+
+			.month-name {
+				font-size: 18px;
+				text-anchor: middle;
+				font-weight: 800;
+				text-transform: uppercase;
+				letter-spacing: .08em;
+			}
+
+			.day-number,
+			.day-name {
+			    font-size: 11px;
+			    /*alignment-baseline: before-edge;*/
+			}
+
+			.day-name {
+				text-anchor: end;
+			}
+
+			.day-number.weekend,
+			.day-name.weekend {
+				font-weight: 800;
+			}
+
+			.day-name.first-half-year {
+				text-anchor: start;
+			}
+
+			.day-name.first-half-year,
+			.day-number.first-half-year {
+				/*alignment-baseline: after-edge;*/
+			}
+
+			.day-number.first-half-year {
+				text-anchor: end;
+			}
+
+			.day-line {
+				stroke: #000;
+			    stroke-dasharray: 1 4;
+			}
+
+
+			.day-line.daily {
+				stroke: #000;
+				stroke-dasharray: none;
+			}
+
+			.day-line.weekly {
+				opacity: 1;
+			}
+
+			.day-line.weekly.sun {
+				opacity: 1;
+				stroke: #f00;
+			}
+
+
+			.day-line.monthly {
+				stroke: red;
+				stroke-dasharray: none;
+			}
+
+			.day-line.monthly.regular-date {
+				opacity: 0;
+			}
+
+			.day-line-white {
+			    /*stroke: #fff;*/
+			    fill: 'none';
+			    stroke-width: 6;
+			}
+
+			.note-circle {
+				stroke: #000;
+				stroke-dasharray: 1 4;
+			}
+
+		</style>
+	</svg>
+	<script type="text/javascript" src="./node_modules/d3/build/d3.js"></script>
+	<script type="text/javascript" src="./node_modules/lodash/lodash.js"></script>
+	<script src="./index.js"></script>
+</body>
+</html>

@@ -1,7 +1,8 @@
 var width = 2100,
   height = 2100,
   margin = {top: 150, right: 150, bottom: 150, left: 150},
-  startDay = new Date(2017, 0, 1);
+  startDay = new Date(2019, 0, 1),
+  ccw = true;
 
 
 function draw(startDay) {
@@ -62,23 +63,6 @@ function draw(startDay) {
     .attr('id', 'text-circle');
     
 
-  // CIRCLES
-/*  container
-    .append('circle')
-    .attr('class', 'note-circle')
-    .attr('r', radius - 55)
-    .attr('cx', radius)
-    .attr('cy', radius)
-    .style('fill', 'none');*/
-
-/*  container
-    .append('circle')
-    .attr('class', 'note-circle')
-    .attr('r', radius - 68)
-    .attr('cx', radius)
-    .attr('cy', radius)
-    .style('fill', 'none');*/
-
 
   // GROUP
   day = container.selectAll('day')
@@ -130,7 +114,7 @@ function draw(startDay) {
     .attr('class', function(d, i) {
       var dayOfYear = getDayOfTheYear(d),
           className = setWeekdayClass(d) + setMonthClass(d);
-      if(dayOfYear < 181)
+      if(dayOfYear > 181)
         className += ' first-half-year';
       return className;
     })
@@ -203,7 +187,9 @@ function draw(startDay) {
 
   day
     .append('path')
-    .attr('d', 'M-2 -65 L -2 -77')
+    // FOR COUNTER CLOCKWISE STARTING AT TOP
+    .attr('d', 'M18 -65 L 18 -77')
+    //.attr('d', 'M0 -65 L 0 -77')
     .attr('class', setMonthClass)
     .classed('day-line', true)
     .classed('monthly', true)
@@ -246,7 +232,11 @@ function draw(startDay) {
 
   function getCircleTransform(i, _r) {
     var angle, x, y, rotation, r;
-    angle = angleStep * i + (Math.PI / 2);
+    if(ccw)
+      angle = Math.PI - angleStep * i + (Math.PI / 2);
+    else
+      angle = Math.PI + angleStep * i - (Math.PI / 2);
+
     r = _r ? _r : radius;
     rotation = (angle * 360) / (2 * Math.PI) + 90;
     x = Math.cos(angle) * radius + radius;

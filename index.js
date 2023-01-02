@@ -1,127 +1,118 @@
 var width = 2100,
   height = 2100,
-  margin = {top: 150, right: 150, bottom: 150, left: 150},
-  startDay = new Date(2019, 0, 1),
-  ccw = true;
-
+  margin = { top: 150, right: 150, bottom: 150, left: 150 },
+  startDay = new Date(2023, 0, 1),
+  ccw = false;
 
 function draw(startDay) {
-  var endDay, 
-      days,
-      angleStep,
-      canvas,
-      container,
-      dayOfMonthFormatter,
-      dayOfWeekFormatter,
-      monthFormatter,
-      defs,
-      radius,
-      dayOfTheYear,
-      monthLabelOffset = -40;
+  var endDay,
+    days,
+    angleStep,
+    canvas,
+    container,
+    dayOfMonthFormatter,
+    dayOfWeekFormatter,
+    monthFormatter,
+    defs,
+    radius,
+    dayOfTheYear,
+    monthLabelOffset = -40;
 
-
-  dayOfMonthFormatter = d3.timeFormat('%d');
-  dayOfWeekFormatter = d3.timeFormat('%a');
-  dayOfTheYear = getDayOfTheYear(startDay)
-  monthFormatter = d3.timeFormat('%B');
-  canvas = d3.select('#canvas');
+  dayOfMonthFormatter = d3.timeFormat("%d");
+  dayOfWeekFormatter = d3.timeFormat("%a");
+  dayOfTheYear = getDayOfTheYear(startDay);
+  monthFormatter = d3.timeFormat("%B");
+  canvas = d3.select("#canvas");
   endDay = new Date(startDay);
   endDay.setYear(startDay.getFullYear() + 1);
   days = d3.timeDay.range(startDay, endDay);
-  angleStep = Math.PI * 2 / (days.length);
+  angleStep = (Math.PI * 2) / days.length;
   radius = (width - margin.left - margin.right) / 2;
 
-  canvas
-    .attr('width', width)
-    .attr('height', height);
+  canvas.attr("width", width).attr("height", height);
 
-  container = canvas.selectAll('g.container')
+  container = canvas
+    .selectAll("g.container")
     .data([0])
     .enter()
-    .append('g')
-    .attr('class', 'container')
-    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+    .append("g")
+    .attr("class", "container")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   // DEFS
-  defs = container.selectAll('defs')
-    .data([0])
-    .enter()
-    .append('defs');
+  defs = container.selectAll("defs").data([0]).enter().append("defs");
 
   // TEXT CIRCLE PATH
   defs
-    .selectAll('path')
+    .selectAll("path")
     .data([0])
     .enter()
-    .append('path')
-    .attr('d', function() {
+    .append("path")
+    .attr("d", function () {
       var angle = Math.PI * 1.5 + Math.PI / 6,
-          x = Math.cos(angle) * (radius - monthLabelOffset),
-          y = Math.sin(angle) * (radius - monthLabelOffset) + radius - monthLabelOffset;
-      return 'M 0 0 A' + radius + ' ' + radius + ' 0, 0, 1, ' + x + ' ' + y;
+        x = Math.cos(angle) * (radius - monthLabelOffset),
+        y =
+          Math.sin(angle) * (radius - monthLabelOffset) +
+          radius -
+          monthLabelOffset;
+      return "M 0 0 A" + radius + " " + radius + " 0, 0, 1, " + x + " " + y;
     })
-    .attr('id', 'text-circle');
-    
-
+    .attr("id", "text-circle");
 
   // GROUP
-  day = container.selectAll('day')
+  day = container
+    .selectAll("day")
     .data(days)
     .enter()
-    .append('g')
-    .attr('transform', placeOnCircle);
-
+    .append("g")
+    .attr("transform", placeOnCircle);
 
   // DAY NUMBER
   day
-    .append('text')
-    .text(dayOfMonthFormatter)   
-    .attr('fill', function(d, i) {
-      return '#000';
-      return i===0 ? '#f00' : '#000'
+    .append("text")
+    .text(dayOfMonthFormatter)
+    .attr("fill", function (d, i) {
+      return "#000";
+      return i === 0 ? "#f00" : "#000";
     })
-    .attr('transform', function(d, i) {
+    .attr("transform", function (d, i) {
       var dayOfYear = getDayOfTheYear(d);
-      if(dayOfYear < 181)
-        return 'rotate(' + 90 + ') translate(-15, -6)';
-      return 'rotate(' + -90 + ') translate(15, 13)';
+      if (dayOfYear < 181) return "rotate(" + 90 + ") translate(-15, -6)";
+      return "rotate(" + -90 + ") translate(15, 13)";
     })
-    .attr('class', function(d, i) {
+    .attr("class", function (d, i) {
       var dayOfYear = getDayOfTheYear(d),
-          className = setWeekdayClass(d) + setMonthClass(d);
-      if(dayOfYear < 181)
-        className += ' first-half-year';
+        className = setWeekdayClass(d) + setMonthClass(d);
+      if (dayOfYear < 181) className += " first-half-year";
       return className;
     })
-    .classed('day-number', true);
+    .classed("day-number", true);
 
   // DAY NUMBER
   day
-    .append('text')
-    .text(function(d, i) {
+    .append("text")
+    .text(function (d, i) {
       return dayOfWeekFormatter(d).slice(0, 1);
     })
-    .attr('fill', function(d, i) {
-      return '#000';
-      return i===0 ? '#f00' : '#000'
+    .attr("fill", function (d, i) {
+      return "#000";
+      return i === 0 ? "#f00" : "#000";
     })
-    .attr('transform', function(d, i) {
+    .attr("transform", function (d, i) {
       var dayOfYear = getDayOfTheYear(d);
-      if(dayOfYear < 181)
-        return 'rotate(' + 90 + ') translate(-43, -6)';
-      return 'rotate(' + -90 + ') translate(43, 13)';
+      if (dayOfYear < 181) return "rotate(" + 90 + ") translate(-43, -6)";
+      return "rotate(" + -90 + ") translate(43, 13)";
     })
-    .attr('class', function(d, i) {
+    .attr("class", function (d, i) {
       var dayOfYear = getDayOfTheYear(d),
-          className = setWeekdayClass(d) + setMonthClass(d);
-      if(dayOfYear > 181)
-        className += ' first-half-year';
+        className = setWeekdayClass(d) + setMonthClass(d);
+      if (dayOfYear > 181) className += " first-half-year";
       return className;
     })
-    .classed('day-name', true);
+    .classed("day-name", true);
 
   // MONTH NAME
-/*  day
+  /*  day
     .append('use')
     .attr('xlink:href', '#text-circle')
     .style('stroke', '#000')
@@ -132,7 +123,7 @@ function draw(startDay) {
     })
     .remove();*/
 
-/*  var monthName = day
+  /*  var monthName = day
     .append('text')
     .attr('transform', 'translate(0, -60)')
     .attr('class', 'month-name');
@@ -153,118 +144,123 @@ function draw(startDay) {
     .remove();*/
 
   var monthName = day
-    .append('text')
-    .attr('transform', 'translate(0, -65)')
-    .attr('class', 'month-name')
-    .style('font-size', '20px')
-    .style('text-transform', 'uppercase')
-    .style('font-family', 'Brandon Grotesque')
-    .text(function(d, i) {
+    .append("text")
+    .attr("transform", "translate(0, -65)")
+    .attr("class", "month-name")
+    .style("font-size", "20px")
+    .style("text-transform", "uppercase")
+    .style("font-family", "Brandon Grotesque")
+    .text(function (d, i) {
       return monthFormatter(d).toUpperCase();
     });
 
   monthName
-    .filter(function(d) {
+    .filter(function (d) {
       return d.getDate() !== Math.floor(getDaysInMonth(d) / 2);
     })
     .remove();
 
-
   // LINE
   day
-    .append('path')
-    .attr('d', 'M18 2 L 18 17')
-    .attr('class', setWeekdayClass)
-    .classed('day-line', true)
-    .classed('daily', true);
+    .append("path")
+    .attr("d", "M18 2 L 18 14")
+    .attr("class", setWeekdayClass)
+    .classed("day-line", true)
+    .classed("daily", true);
 
   day
-    .append('path')
-    .attr('d', 'M18 80 L 18 190')
-    .attr('class', setWeekdayClass)
-    .classed('day-line', true)
-    .classed('weekly', true);
+    .append("path")
+    .attr("d", "M18 25 L 18 37")
+    .attr("class", setWeekdayClass)
+    .classed("day-line", true)
+    .classed("daily", true);
 
   day
-    .append('path')
+    .append("path")
+    .attr("d", "M18 48 L 18 60")
+    .attr("class", setWeekdayClass)
+    .classed("day-line", true)
+    .classed("daily", true);
+
+  // day
+  //   .append("path")
+  //   .attr("d", "M18 80 L 18 190")
+  //   .attr("class", setWeekdayClass)
+  //   .classed("day-line", true)
+  //   .classed("weekly", true);
+
+  day
+    .append("path")
     // FOR COUNTER CLOCKWISE STARTING AT TOP
-    .attr('d', 'M18 -65 L 18 -77')
-    //.attr('d', 'M0 -65 L 0 -77')
-    .attr('class', setMonthClass)
-    .classed('day-line', true)
-    .classed('monthly', true)
-    .filter(function(d, i) {
+    //.attr("d", "M18 -65 L 18 -77")
+    .attr("d", "M0 -65 L 0 -77")
+    .attr("class", setMonthClass)
+    .classed("day-line", true)
+    .classed("monthly", true)
+    .filter(function (d, i) {
       return d.getDate() !== 1;
     })
     .remove();
 
-  container
-    .selectAll('text')
-    .style('font-family', 'Brandon Grotesque');
+  container.selectAll("text").style("font-family", "Brandon Grotesque");
 
-  container
-    .selectAll('textPath')
-    .style('font-family', 'Brandon Grotesque');
-
+  container.selectAll("textPath").style("font-family", "Brandon Grotesque");
 
   function setWeekdayClass(d, i) {
     var day = d.getDay(),
-        className = '';
-    className += dayOfWeekFormatter(d).toLowerCase() + ' ';
-    className += (day === 0 || day === 6) ? 'weekend ' : 'weekday ';
+      className = "";
+    className += dayOfWeekFormatter(d).toLowerCase() + " ";
+    className += day === 0 || day === 6 ? "weekend " : "weekday ";
     return className;
   }
 
   function setMonthClass(d, i) {
     var date = d.getDate();
-    return (date === 1) ? 'first-of-month' : 'regular-date';
+    return date === 1 ? "first-of-month" : "regular-date";
   }
-
 
   function placeOnCircle(d, i, selection) {
     var index = (i + dayOfTheYear) % 365,
-        translate, rotate, transform;
+      translate,
+      rotate,
+      transform;
     transform = getCircleTransform(index);
-    translate = 'translate(' + transform.x + ',' + transform.y + ')';
-    rotate = 'rotate(' + transform.rotation + ')';
-    return translate + ' ' + rotate;
+    translate = "translate(" + transform.x + "," + transform.y + ")";
+    rotate = "rotate(" + transform.rotation + ")";
+    return translate + " " + rotate;
   }
 
   function getCircleTransform(i, _r) {
     var angle, x, y, rotation, r;
-    if(ccw)
-      angle = Math.PI - angleStep * i + (Math.PI / 2);
-    else
-      angle = Math.PI + angleStep * i - (Math.PI / 2);
+    if (ccw) angle = Math.PI - angleStep * i + Math.PI / 2;
+    else angle = Math.PI + angleStep * i - Math.PI / 2;
 
     r = _r ? _r : radius;
     rotation = (angle * 360) / (2 * Math.PI) + 90;
     x = Math.cos(angle) * radius + radius;
     y = Math.sin(angle) * radius + radius;
 
-    return {x: x, y: y, rotation: rotation};
+    return { x: x, y: y, rotation: rotation };
   }
 }
 
-
 function getDaysInMonth(d) {
   var start = new Date(d),
-      end = new Date(d);
+    end = new Date(d);
 
-  start.setDate(1)
+  start.setDate(1);
   end.setDate(15);
-  end.setMonth(start.getMonth() + 1)
+  end.setMonth(start.getMonth() + 1);
   end.setDate(1);
-  return d3.timeDays(start, end).length;  
+  return d3.timeDays(start, end).length;
 }
 
 function getDayOfTheYear(date) {
   var timestmp = new Date().setFullYear(date.getFullYear(), 0, 1);
   var yearFirstDay = Math.floor(timestmp / 86400000);
-  var day = Math.ceil((date.getTime()) / 86400000);
+  var day = Math.ceil(date.getTime() / 86400000);
   var dayOfYear = day - yearFirstDay;
   return dayOfYear;
 }
-
 
 window.onload = draw.bind(this, startDay);
